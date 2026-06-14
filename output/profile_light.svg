@@ -2,7 +2,7 @@
   <rect width="480" height="408" rx="6" ry="6" fill="#ffffff" stroke="#d0d7de" stroke-width="1"/>
   <text x="20" y="34" font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="#0969da">swastik@github ~ $</text>
   <text x="20" y="58" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">uptime ...............</text>
-  <text x="200" y="58" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">22 years, 0 months, 10 days</text>
+  <text x="200" y="58" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">22 years, 0 months, 11 days</text>
   <text x="20" y="76" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">os ...................</text>
   <text x="200" y="76" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">windows · linux ·</text>
   <text x="200" y="94" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">android 16</text>
@@ -31,5 +31,5 @@
   <text x="20" y="338" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">wordsmith</text>
   <text x="160" y="338" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">wordlist gen</text>
   <line x1="20" y1="362" x2="460" y2="362" stroke="#d0d7de" stroke-width="1"/>
-  <text x="20" y="380" font-family="'Courier New', monospace" font-size="11" font-weight="normal" fill="#57606a">last updated: 2026-06-13 04:07 UTC</text>
+  <text x="20" y="380" font-family="'Courier New', monospace" font-size="11" font-weight="normal" fill="#57606a">last updated: 2026-06-14 04:24 UTC</text>
 </svg>
