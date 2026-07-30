@@ -33,16 +33,18 @@ TOOLS = [
 
 DARK = {
     "background":   "#0d1117",
+    "titlebar":     "#161b22",
     "border":       "#30363d",
     "text_primary": "#e6edf3",
     "text_muted":   "#8b949e",
     "text_accent":  "#58a6ff",
-    "text_green":   "#3fb950",
+    "text_green":   "#56d364",
     "text_red":     "#f85149",
 }
 
 LIGHT = {
     "background":   "#ffffff",
+    "titlebar":     "#f6f8fa",
     "border":       "#d0d7de",
     "text_primary": "#24292f",
     "text_muted":   "#57606a",
@@ -50,6 +52,9 @@ LIGHT = {
     "text_green":   "#1a7f37",
     "text_red":     "#cf222e",
 }
+
+# classic terminal traffic lights — flat fills only, no glow/blur
+TRAFFIC_LIGHTS = ("#ff5f56", "#ffbd2e", "#27c93f")
 
 # characters allocated to label + dot-padding before x=200 value column
 LABEL_WIDTH = 22
@@ -359,12 +364,14 @@ def save_cache(data: dict, path: str = "cache/loc_cache.json") -> None:
 # ─── SVG Generator ────────────────────────────────────────────────────────────
 
 def generate_svg(stats: dict, theme: str) -> str:
-    c      = DARK if theme == "dark" else LIGHT
-    W      = 480
-    LEFT   = 20
-    VAL_X  = 200
-    LINE_H = 18
-    FONT   = "'Courier New', monospace"
+    c        = DARK if theme == "dark" else LIGHT
+    W        = 480
+    LEFT     = 20
+    VAL_X    = 200
+    LINE_H   = 18
+    TITLE_H  = 30
+    FONT     = "ui-monospace, SFMono-Regular, 'Courier New', monospace"
+    CHAR_W   = {14: 8.4, 13: 7.8, 12: 7.2, 11: 6.6}
 
     elems: list[str] = []
     y = 0
@@ -376,13 +383,15 @@ def generate_svg(stats: dict, theme: str) -> str:
         fill: str,
         size: int = 13,
         weight: str = "normal",
-    ) -> None:
+    ) -> float:
+        """Draw text, return the x position immediately after it."""
         elems.append(
             f'  <text x="{x}" y="{cy}" '
             f'font-family="{FONT}" '
             f'font-size="{size}" font-weight="{weight}" '
             f'fill="{fill}">{xml_escape(text)}</text>'
         )
+        return x + len(text) * CHAR_W[size]
 
     def hline(cy: int) -> None:
         elems.append(
@@ -390,28 +399,64 @@ def generate_svg(stats: dict, theme: str) -> str:
             f'stroke="{c["border"]}" stroke-width="1"/>'
         )
 
+    def prompt_line(cy: int, tail: str, size: int = 12) -> None:
+        """'$ tail' in the muted/green shell-prompt style used for section headers."""
+        x = txt("$ ", LEFT, cy, c["text_green"], size=size, weight="bold")
+        txt(tail, x, cy, c["text_muted"], size=size)
+
     def stat_row(
         label: str, value: str, val_color: str | None = None
     ) -> None:
         nonlocal y
-        color = val_color or c["text_accent"]
+        color = val_color or c["text_green"]
         txt(fmt_label(label), LEFT, y, c["text_muted"])
         txt(value, VAL_X, y, color, weight="bold")
         y += LINE_H
 
+    # ── Title bar ──────────────────────────────────────────────────────────────
+    elems.append(
+        f'  <rect width="{W}" height="{TITLE_H}" rx="6" ry="6" fill="{c["titlebar"]}"/>'
+    )
+    # square off the bottom corners of the rounded title-bar rect
+    elems.append(
+        f'  <rect y="{TITLE_H - 6}" width="{W}" height="6" fill="{c["titlebar"]}"/>'
+    )
+    for i, dot_color in enumerate(TRAFFIC_LIGHTS):
+        elems.append(
+            f'  <circle cx="{16 + i * 16}" cy="{TITLE_H / 2}" r="5" fill="{dot_color}"/>'
+        )
+    txt("amibhai — zsh", W / 2 - 44, TITLE_H / 2 + 4, c["text_muted"], size=11)
+    elems.append(
+        f'  <line x1="0" y1="{TITLE_H}" x2="{W}" y2="{TITLE_H}" '
+        f'stroke="{c["border"]}" stroke-width="1"/>'
+    )
+
     # ── Prompt header ─────────────────────────────────────────────────────────
-    y = 34
-    txt("swastik@github ~ $", LEFT, y, c["text_accent"], size=14, weight="bold")
-    y += LINE_H + 6   # extra gap below header
+    y = TITLE_H + 24
+    x = txt("amibhai", LEFT, y, c["text_green"], size=14, weight="bold")
+    x = txt("@", x, y, c["text_muted"], size=14, weight="bold")
+    x = txt("github", x, y, c["text_accent"], size=14, weight="bold")
+    x = txt(":~$", x, y, c["text_muted"], size=14, weight="bold")
+    cursor_x = x + 8
+    elems.append(
+        f'  <rect x="{cursor_x:.1f}" y="{y - 11}" width="8" height="13" fill="{c["text_green"]}">\n'
+        f'    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" '
+        f'dur="1s" repeatCount="indefinite"/>\n'
+        f'  </rect>'
+    )
+    y += LINE_H + 10
 
     # ── Stats block ───────────────────────────────────────────────────────────
+    prompt_line(y, "cat stats.log")
+    y += LINE_H + 2
+
     stat_row("uptime", stats["uptime"])
 
     # OS: two-line value
     txt(fmt_label("os"), LEFT, y, c["text_muted"])
-    txt("windows · linux ·", VAL_X, y, c["text_accent"], weight="bold")
+    txt("windows · linux ·", VAL_X, y, c["text_green"], weight="bold")
     y += LINE_H
-    txt("android 16", VAL_X, y, c["text_accent"], weight="bold")
+    txt("android 16", VAL_X, y, c["text_green"], weight="bold")
     y += LINE_H
 
     stat_row("repos",         f"{stats['repos']:,}")
@@ -421,7 +466,7 @@ def generate_svg(stats: dict, theme: str) -> str:
     stat_row("lines written", f"{stats['additions']:,}")
 
     net = stats["net_loc"]
-    net_color = c["text_red"] if net < 0 else c["text_accent"]
+    net_color = c["text_red"] if net < 0 else c["text_green"]
     stat_row("net loc", f"{net:,}", val_color=net_color)
 
     if stats.get("api_error"):
@@ -434,7 +479,7 @@ def generate_svg(stats: dict, theme: str) -> str:
     y += LINE_H + 2
 
     # ── Toolkit section ───────────────────────────────────────────────────────
-    txt("toolkit", LEFT, y, c["text_muted"])
+    prompt_line(y, "ls ./arsenal")
     y += LINE_H + 2
 
     TOOL_DESC_X = 160
@@ -450,7 +495,7 @@ def generate_svg(stats: dict, theme: str) -> str:
 
     # ── Last updated ──────────────────────────────────────────────────────────
     txt(
-        f"last updated: {stats['updated_at']}",
+        f"# last sync: {stats['updated_at']}",
         LEFT, y, c["text_muted"], size=11,
     )
     y += LINE_H + 10   # bottom padding

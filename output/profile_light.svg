@@ -1,35 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="480" height="408">
-  <rect width="480" height="408" rx="6" ry="6" fill="#ffffff" stroke="#d0d7de" stroke-width="1"/>
-  <text x="20" y="34" font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="#0969da">swastik@github ~ $</text>
-  <text x="20" y="58" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">uptime ...............</text>
-  <text x="200" y="58" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">22 years, 0 months, 9 days</text>
-  <text x="20" y="76" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">os ...................</text>
-  <text x="200" y="76" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">windows · linux ·</text>
-  <text x="200" y="94" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">android 16</text>
-  <text x="20" y="112" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">repos ................</text>
-  <text x="200" y="112" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">12</text>
-  <text x="20" y="130" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">commits ..............</text>
-  <text x="200" y="130" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">245</text>
-  <text x="20" y="148" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">stars ................</text>
-  <text x="200" y="148" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">8</text>
-  <text x="20" y="166" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">followers ............</text>
-  <text x="200" y="166" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">1</text>
-  <text x="20" y="184" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">lines written ........</text>
-  <text x="200" y="184" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">72,469</text>
-  <text x="20" y="202" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">net loc ..............</text>
-  <text x="200" y="202" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#0969da">66,013</text>
-  <line x1="20" y1="226" x2="460" y2="226" stroke="#d0d7de" stroke-width="1"/>
-  <text x="20" y="246" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">toolkit</text>
-  <text x="20" y="266" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">andronet</text>
-  <text x="160" y="266" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">packet analyzer</text>
-  <text x="20" y="284" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">wifi_down</text>
-  <text x="160" y="284" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">wifi auditing</text>
-  <text x="20" y="302" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">recon-toolkit</text>
-  <text x="160" y="302" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">network recon</text>
-  <text x="20" y="320" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">cred-toolkit</text>
-  <text x="160" y="320" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">credential attacks</text>
-  <text x="20" y="338" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">wordsmith</text>
-  <text x="160" y="338" font-family="'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">wordlist gen</text>
-  <line x1="20" y1="362" x2="460" y2="362" stroke="#d0d7de" stroke-width="1"/>
-  <text x="20" y="380" font-family="'Courier New', monospace" font-size="11" font-weight="normal" fill="#57606a">last updated: 2026-06-12 16:44 UTC</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="452">
+  <rect width="480" height="452" rx="6" ry="6" fill="#ffffff" stroke="#d0d7de" stroke-width="1"/>
+  <rect width="480" height="30" rx="6" ry="6" fill="#f6f8fa"/>
+  <rect y="24" width="480" height="6" fill="#f6f8fa"/>
+  <circle cx="16" cy="15.0" r="5" fill="#ff5f56"/>
+  <circle cx="32" cy="15.0" r="5" fill="#ffbd2e"/>
+  <circle cx="48" cy="15.0" r="5" fill="#27c93f"/>
+  <text x="196.0" y="19.0" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="11" font-weight="normal" fill="#57606a">amibhai — zsh</text>
+  <line x1="0" y1="30" x2="480" y2="30" stroke="#d0d7de" stroke-width="1"/>
+  <text x="20" y="54" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="14" font-weight="bold" fill="#1a7f37">amibhai</text>
+  <text x="78.80000000000001" y="54" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="14" font-weight="bold" fill="#57606a">@</text>
+  <text x="87.20000000000002" y="54" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="14" font-weight="bold" fill="#0969da">github</text>
+  <text x="137.60000000000002" y="54" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="14" font-weight="bold" fill="#57606a">:~$</text>
+  <rect x="170.8" y="43" width="8" height="13" fill="#1a7f37">
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+  <text x="20" y="82" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="12" font-weight="bold" fill="#1a7f37">$ </text>
+  <text x="34.4" y="82" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="12" font-weight="normal" fill="#57606a">cat stats.log</text>
+  <text x="20" y="102" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">uptime ...............</text>
+  <text x="200" y="102" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">22 years, 1 months, 27 days</text>
+  <text x="20" y="120" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">os ...................</text>
+  <text x="200" y="120" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">windows · linux ·</text>
+  <text x="200" y="138" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">android 16</text>
+  <text x="20" y="156" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">repos ................</text>
+  <text x="200" y="156" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">12</text>
+  <text x="20" y="174" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">commits ..............</text>
+  <text x="200" y="174" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">245</text>
+  <text x="20" y="192" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">stars ................</text>
+  <text x="200" y="192" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">8</text>
+  <text x="20" y="210" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">followers ............</text>
+  <text x="200" y="210" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">1</text>
+  <text x="20" y="228" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">lines written ........</text>
+  <text x="200" y="228" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">72,469</text>
+  <text x="20" y="246" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">net loc ..............</text>
+  <text x="200" y="246" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">66,013</text>
+  <line x1="20" y1="270" x2="460" y2="270" stroke="#d0d7de" stroke-width="1"/>
+  <text x="20" y="290" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="12" font-weight="bold" fill="#1a7f37">$ </text>
+  <text x="34.4" y="290" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="12" font-weight="normal" fill="#57606a">ls ./arsenal</text>
+  <text x="20" y="310" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">andronet</text>
+  <text x="160" y="310" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">packet analyzer</text>
+  <text x="20" y="328" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">wifi_down</text>
+  <text x="160" y="328" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">wifi auditing</text>
+  <text x="20" y="346" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">recon-toolkit</text>
+  <text x="160" y="346" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">network recon</text>
+  <text x="20" y="364" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">cred-toolkit</text>
+  <text x="160" y="364" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">credential attacks</text>
+  <text x="20" y="382" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">wordsmith</text>
+  <text x="160" y="382" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">wordlist gen</text>
+  <line x1="20" y1="406" x2="460" y2="406" stroke="#d0d7de" stroke-width="1"/>
+  <text x="20" y="424" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="11" font-weight="normal" fill="#57606a"># last sync: 2026-07-30 18:00 UTC (cached — awaiting next Actions run)</text>
 </svg>
