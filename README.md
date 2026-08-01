@@ -2,7 +2,7 @@
 
 # whoami
 
-**Swastik** · `amibhai` · cybersecurity undergrad — recon, exploitation, telemetry
+**Swastik** · `amibhai` · B.tech in cybersecurity  — recon, exploitation, telemetry, android security
 
 *probably breaking something on purpose right now*
 
