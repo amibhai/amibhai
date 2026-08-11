@@ -17,22 +17,22 @@
   <text x="20" y="82" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="12" font-weight="bold" fill="#1a7f37">$ </text>
   <text x="34.4" y="82" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="12" font-weight="normal" fill="#57606a">cat stats.log</text>
   <text x="20" y="102" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">uptime ...............</text>
-  <text x="200" y="102" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">22 years, 2 months, 7 days</text>
+  <text x="200" y="102" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">22 years, 2 months, 8 days</text>
   <text x="20" y="120" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">os ...................</text>
   <text x="200" y="120" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">windows · linux ·</text>
   <text x="200" y="138" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">android 16</text>
   <text x="20" y="156" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">repos ................</text>
   <text x="200" y="156" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">17</text>
   <text x="20" y="174" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">commits ..............</text>
-  <text x="200" y="174" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">565</text>
+  <text x="200" y="174" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">567</text>
   <text x="20" y="192" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">stars ................</text>
-  <text x="200" y="192" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">19</text>
+  <text x="200" y="192" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">20</text>
   <text x="20" y="210" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">followers ............</text>
-  <text x="200" y="210" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">4</text>
+  <text x="200" y="210" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">5</text>
   <text x="20" y="228" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">lines written ........</text>
-  <text x="200" y="228" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">146,697</text>
+  <text x="200" y="228" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">147,163</text>
   <text x="20" y="246" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">net loc ..............</text>
-  <text x="200" y="246" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">109,579</text>
+  <text x="200" y="246" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="bold" fill="#1a7f37">109,994</text>
   <line x1="20" y1="270" x2="460" y2="270" stroke="#d0d7de" stroke-width="1"/>
   <text x="20" y="290" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="12" font-weight="bold" fill="#1a7f37">$ </text>
   <text x="34.4" y="290" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="12" font-weight="normal" fill="#57606a">ls ./arsenal</text>
@@ -47,5 +47,5 @@
   <text x="20" y="382" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#24292f">wordsmith</text>
   <text x="160" y="382" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="13" font-weight="normal" fill="#57606a">wordlist gen</text>
   <line x1="20" y1="406" x2="460" y2="406" stroke="#d0d7de" stroke-width="1"/>
-  <text x="20" y="424" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="11" font-weight="normal" fill="#57606a"># last sync: 2026-08-10 02:01 UTC</text>
+  <text x="20" y="424" font-family="ui-monospace, SFMono-Regular, 'Courier New', monospace" font-size="11" font-weight="normal" fill="#57606a"># last sync: 2026-08-11 01:56 UTC</text>
 </svg>
