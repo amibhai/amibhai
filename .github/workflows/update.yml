@@ -19,7 +19,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install requests python-dateutil lxml
+        run: pip install requests
 
       - name: Run generator
         env:
@@ -30,6 +30,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add output/profile.svg output/profile_light.svg cache/loc_cache.json
+          git add output/profile.svg output/profile_light.svg cache/stats_cache.json
           git diff --cached --quiet || git commit -m "chore: update profile stats"
           git push

@@ -1,42 +1,30 @@
-<div align="center">
-
-# whoami
-
-**Swastik** · `amibhai` · B.tech in cybersecurity  — recon, exploitation, telemetry, android security
-
-*probably breaking something on purpose right now*
-
-</div>
-
----
-
-### arsenal
-
-| tool | what it does |
-|---|---|
-| [recon-toolkit](https://github.com/amibhai/recon-toolkit) | network recon suite — DNS enum, host discovery, OS/port/vuln scan |
-| [credential-attacks-toolkit](https://github.com/amibhai/credential-attacks-toolkit) | authorized credential attacks against SSH, FTP, and web logins |
-| [Honeypot-Risk-Scoring-Model](https://github.com/amibhai/Honeypot-Risk-Scoring-Model) | ingests honeypot telemetry, scores risk for SOC triage, ships to Kibana |
-| [wifi_down](https://github.com/amibhai/wifi_down) | wifi auditing pipeline — scan → attack → crack → report |
-| [AndroNet](https://github.com/amibhai/AndroNet) | mobile packet analyzer built for Kali NetHunter |
-| [wordsmith](https://github.com/amibhai/wordsmith) | wordlist generator, pattern engines + scenario profiles |
-| [spoofed](https://github.com/amibhai/spoofed) | spoofing and network deception toolkit |
-
-### stack
-
-`Python` `Bash` `Kotlin` — `Kali Linux` `NetHunter` `Windows` `Android`
-
-focus: network security · telemetry analysis · offensive tooling · automation
-
-### telemetry
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/amibhai/amibhai/main/output/profile.svg">
-  <img alt="live stats terminal" src="https://raw.githubusercontent.com/amibhai/amibhai/main/output/profile_light.svg" width="480">
+  <img alt="Swastik — offensive and defensive security tooling. Repository and contribution counts, refreshed daily." src="https://raw.githubusercontent.com/amibhai/amibhai/main/output/profile_light.svg" width="600">
 </picture>
 
-<sub>refreshed daily via GitHub Actions — see <a href="generate.py">generate.py</a></sub>
+I build security tooling on both sides of the engagement: offensive frameworks that model how intrusions actually happen, and detection systems that measure whether anyone would have noticed.
+
+B.Tech in cybersecurity; research intern. Recent work centres on Android kernel telemetry and metadata-resistant communication.
+
+## Selected work
+
+**[Chiral](https://github.com/amibhai/Chiral)** — Attributes security-relevant kernel events, from network egress to credential-adjacent file access, to installed Android packages rather than to PIDs or UIDs. *Rust, eBPF*
+
+**[Parda](https://github.com/amibhai/Parda)** — End-to-end encrypted messaging built to resist metadata analysis, not only content interception. *Rust*
+
+**[mirrorlab](https://github.com/amibhai/mirrorlab)** — Simulates ATT&CK techniques against a Sigma ruleset to establish which attacks the rules actually catch. *Python*
+
+**[DARPAN](https://github.com/amibhai/DARPAN)** — Multi-protocol deception framework for threat-actor profiling and campaign tracking. *Python*
+
+**[spoofed](https://github.com/amibhai/spoofed)** — Async network spoofing suite for authorized auditing: IPv4/IPv6 interception, LLMNR/NBT-NS poisoning, tamper-evident audit logging. *Python*
+
+**[wifi_down](https://github.com/amibhai/wifi_down)** — Automated WiFi security auditing across the full pipeline — scan, attack, crack, report. *Python*
 
 ---
 
-*authorized security testing only. unauthorized access will be logged, mocked, and possibly honeypotted.*
+Python and Rust, primarily; Go, TypeScript, Dart and eBPF where the problem calls for it.
+
+Offensive tooling here is written for authorized testing.
+
+Open to work — [swastik362004@gmail.com](mailto:swastik362004@gmail.com)

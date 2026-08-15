@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """
-GitHub profile SVG generator for amibhai (Swastik).
-Queries the GitHub GraphQL API → writes dark/light SVGs to output/.
+Profile plate generator for amibhai (Swastik).
+
+Queries the GitHub GraphQL API and writes two monochrome SVGs to output/ —
+one per colour scheme. README.md picks between them with <picture> +
+prefers-color-scheme.
+
 Run: python generate.py  (requires GH_TOKEN environment variable)
 """
 
@@ -10,12 +14,10 @@ import json
 import time
 import datetime
 import requests
-from dateutil.relativedelta import relativedelta
 
 # ─── Config ───────────────────────────────────────────────────────────────────
 
 USERNAME     = "amibhai"
-DOB          = datetime.date(2004, 6, 3)
 GITHUB_TOKEN = os.environ["GH_TOKEN"]
 HEADERS      = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
@@ -23,41 +25,20 @@ HEADERS      = {
 }
 GRAPHQL_URL = "https://api.github.com/graphql"
 
-TOOLS = [
-    ("andronet",      "packet analyzer"),
-    ("wifi_down",     "wifi auditing"),
-    ("recon-toolkit", "network recon"),
-    ("cred-toolkit",  "credential attacks"),
-    ("wordsmith",     "wordlist gen"),
-]
-
+# Monochrome only — GitHub's own neutrals, so the plate reads in either theme.
 DARK = {
-    "background":   "#0d1117",
-    "titlebar":     "#161b22",
-    "border":       "#30363d",
-    "text_primary": "#e6edf3",
-    "text_muted":   "#8b949e",
-    "text_accent":  "#58a6ff",
-    "text_green":   "#56d364",
-    "text_red":     "#f85149",
+    "primary": "#e6edf3",
+    "muted":   "#7d8590",
+    "rule":    "#30363d",
 }
 
 LIGHT = {
-    "background":   "#ffffff",
-    "titlebar":     "#f6f8fa",
-    "border":       "#d0d7de",
-    "text_primary": "#24292f",
-    "text_muted":   "#57606a",
-    "text_accent":  "#0969da",
-    "text_green":   "#1a7f37",
-    "text_red":     "#cf222e",
+    "primary": "#1f2328",
+    "muted":   "#59636e",
+    "rule":    "#d1d9e0",
 }
 
-# classic terminal traffic lights — flat fills only, no glow/blur
-TRAFFIC_LIGHTS = ("#ff5f56", "#ffbd2e", "#27c93f")
-
-# characters allocated to label + dot-padding before x=200 value column
-LABEL_WIDTH = 22
+SUBTITLE = "Offensive and defensive security tooling"
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -69,13 +50,6 @@ def xml_escape(s: str) -> str:
          .replace(">", "&gt;")
          .replace('"', "&quot;")
     )
-
-
-def fmt_label(label: str) -> str:
-    """Return 'label ..........' right-padded with dots to LABEL_WIDTH chars."""
-    with_space = label + " "
-    dots = max(0, LABEL_WIDTH - len(with_space))
-    return with_space + "." * dots
 
 
 def _graphql(query: str, variables: dict | None = None) -> dict:
@@ -118,69 +92,27 @@ def _graphql(query: str, variables: dict | None = None) -> dict:
     raise RuntimeError("GraphQL request failed after 3 retries")
 
 
-# ─── Uptime ───────────────────────────────────────────────────────────────────
-
-def get_uptime(dob: datetime.date) -> str:
-    today = datetime.date.today()
-    d = relativedelta(today, dob)
-    base = f"{d.years} years, {d.months} months, {d.days} days"
-    if today.month == dob.month and today.day == dob.day:
-        return base + " [BIRTHDAY]"
-    return base
-
-
 # ─── GitHub data fetchers ─────────────────────────────────────────────────────
 
 def get_user_stats() -> dict:
     query = """
     query($login: String!) {
         user(login: $login) {
-            followers { totalCount }
-            repositories(ownerAffiliations: OWNER) { totalCount }
+            repositories(ownerAffiliations: OWNER, privacy: PUBLIC) {
+                totalCount
+            }
             createdAt
         }
     }
     """
     user = _graphql(query, {"login": USERNAME})["data"]["user"]
     return {
-        "followers":  user["followers"]["totalCount"],
         "repos":      user["repositories"]["totalCount"],
         "created_at": user["createdAt"],
     }
 
 
-def get_total_stars() -> int:
-    query = """
-    query($login: String!, $cursor: String) {
-        user(login: $login) {
-            repositories(
-                ownerAffiliations: OWNER,
-                first: 100,
-                after: $cursor
-            ) {
-                nodes { stargazerCount }
-                pageInfo { hasNextPage endCursor }
-            }
-        }
-    }
-    """
-    total = 0
-    cursor = None
-    while True:
-        repos = (
-            _graphql(query, {"login": USERNAME, "cursor": cursor})
-            ["data"]["user"]["repositories"]
-        )
-        for r in repos["nodes"]:
-            total += r["stargazerCount"]
-        if not repos["pageInfo"]["hasNextPage"]:
-            break
-        cursor = repos["pageInfo"]["endCursor"]
-        time.sleep(0.5)
-    return total
-
-
-def get_total_commits(created_at: str) -> int:
+def get_total_contributions(created_at: str) -> int:
     """
     Sum contributions across all calendar years from account creation to now.
     GitHub restricts contributionsCollection windows to <=366 days, so we
@@ -198,7 +130,7 @@ def get_total_commits(created_at: str) -> int:
     created_year = datetime.datetime.fromisoformat(
         created_at.replace("Z", "+00:00")
     ).year
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.timezone.utc)
     total = 0
 
     for year in range(created_year, now.year + 1):
@@ -219,135 +151,12 @@ def get_total_commits(created_at: str) -> int:
     return total
 
 
-def _viewer_id() -> str:
-    return _graphql("query { viewer { id } }")["data"]["viewer"]["id"]
-
-
-def get_lines_of_code(cache: dict) -> tuple[int, int, dict]:
-    """
-    Returns (total_additions, total_deletions, updated_cache).
-    Cache key: "{owner}/{repo}:{head_commit_sha}"
-    Only re-scans repos where HEAD SHA has changed since last run.
-    """
-    list_query = """
-    query($login: String!, $cursor: String) {
-        user(login: $login) {
-            repositories(
-                ownerAffiliations: OWNER,
-                first: 100,
-                after: $cursor
-            ) {
-                nodes {
-                    nameWithOwner
-                    defaultBranchRef {
-                        target { ... on Commit { oid } }
-                    }
-                }
-                pageInfo { hasNextPage endCursor }
-            }
-        }
-    }
-    """
-    commit_query = """
-    query($owner: String!, $name: String!, $cursor: String) {
-        repository(owner: $owner, name: $name) {
-            defaultBranchRef {
-                target {
-                    ... on Commit {
-                        history(first: 100, after: $cursor) {
-                            nodes {
-                                additions
-                                deletions
-                                author { user { id } }
-                            }
-                            pageInfo { hasNextPage endCursor }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    """
-
-    viewer_id = _viewer_id()
-
-    # Collect all owned repos with their current HEAD SHA
-    repos: list[dict] = []
-    cursor = None
-    while True:
-        result = _graphql(list_query, {"login": USERNAME, "cursor": cursor})
-        repo_page = result["data"]["user"]["repositories"]
-        for r in repo_page["nodes"]:
-            branch = r["defaultBranchRef"]
-            if not branch:
-                continue
-            target = branch.get("target") or {}
-            if "oid" not in target:
-                continue
-            repos.append({"nwo": r["nameWithOwner"], "sha": target["oid"]})
-        if not repo_page["pageInfo"]["hasNextPage"]:
-            break
-        cursor = repo_page["pageInfo"]["endCursor"]
-        time.sleep(0.5)
-
-    total_add = 0
-    total_del = 0
-    new_cache: dict = {}
-
-    for repo in repos:
-        nwo = repo["nwo"]
-        sha = repo["sha"]
-        key = f"{nwo}:{sha}"
-
-        if key in cache:
-            entry = cache[key]
-            total_add += entry["additions"]
-            total_del += entry["deletions"]
-            new_cache[key] = entry
-            continue
-
-        print(f"  scanning {nwo}...")
-        owner, name = nwo.split("/", 1)
-        repo_add = 0
-        repo_del = 0
-        cc = None
-
-        while True:
-            try:
-                data = _graphql(
-                    commit_query, {"owner": owner, "name": name, "cursor": cc}
-                )
-                ref = data["data"]["repository"]["defaultBranchRef"]
-                if not ref:
-                    break
-                history = ref["target"]["history"]
-
-                for commit in history["nodes"]:
-                    author = commit.get("author") or {}
-                    cuser  = author.get("user") or {}
-                    if cuser.get("id") == viewer_id:
-                        repo_add += commit["additions"]
-                        repo_del += commit["deletions"]
-
-                if not history["pageInfo"]["hasNextPage"]:
-                    break
-                cc = history["pageInfo"]["endCursor"]
-                time.sleep(0.5)
-
-            except Exception as exc:
-                print(f"  [!] error scanning {nwo}: {exc}")
-                break
-
-        new_cache[key] = {"additions": repo_add, "deletions": repo_del}
-        total_add += repo_add
-        total_del += repo_del
-
-    return total_add, total_del, new_cache
-
-
 # ─── Cache I/O ────────────────────────────────────────────────────────────────
 
-def load_cache(path: str = "cache/loc_cache.json") -> dict:
+CACHE_PATH = "cache/stats_cache.json"
+
+
+def load_cache(path: str = CACHE_PATH) -> dict:
     try:
         with open(path, encoding="utf-8") as f:
             return json.load(f)
@@ -355,161 +164,56 @@ def load_cache(path: str = "cache/loc_cache.json") -> dict:
         return {}
 
 
-def save_cache(data: dict, path: str = "cache/loc_cache.json") -> None:
+def save_cache(data: dict, path: str = CACHE_PATH) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
 
-# ─── SVG Generator ────────────────────────────────────────────────────────────
+# ─── SVG generator ────────────────────────────────────────────────────────────
 
 def generate_svg(stats: dict, theme: str) -> str:
-    c        = DARK if theme == "dark" else LIGHT
-    W        = 480
-    LEFT     = 20
-    VAL_X    = 200
-    LINE_H   = 18
-    TITLE_H  = 30
-    FONT     = "ui-monospace, SFMono-Regular, 'Courier New', monospace"
-    CHAR_W   = {14: 8.4, 13: 7.8, 12: 7.2, 11: 6.6}
+    """
+    A borderless typographic plate: tracked-out name, quiet subtitle, one
+    hairline rule, and a single justified metric line. No background fill —
+    the README's own background shows through in either theme.
+    """
+    c = DARK if theme == "dark" else LIGHT
+    W, H = 600, 128
 
-    elems: list[str] = []
-    y = 0
-
-    def txt(
-        text: str,
-        x: int,
-        cy: int,
-        fill: str,
-        size: int = 13,
-        weight: str = "normal",
-    ) -> float:
-        """Draw text, return the x position immediately after it."""
-        elems.append(
-            f'  <text x="{x}" y="{cy}" '
-            f'font-family="{FONT}" '
-            f'font-size="{size}" font-weight="{weight}" '
-            f'fill="{fill}">{xml_escape(text)}</text>'
-        )
-        return x + len(text) * CHAR_W[size]
-
-    def hline(cy: int) -> None:
-        elems.append(
-            f'  <line x1="{LEFT}" y1="{cy}" x2="{W - LEFT}" y2="{cy}" '
-            f'stroke="{c["border"]}" stroke-width="1"/>'
-        )
-
-    def prompt_line(cy: int, tail: str, size: int = 12) -> None:
-        """'$ tail' in the muted/green shell-prompt style used for section headers."""
-        x = txt("$ ", LEFT, cy, c["text_green"], size=size, weight="bold")
-        txt(tail, x, cy, c["text_muted"], size=size)
-
-    def stat_row(
-        label: str, value: str, val_color: str | None = None
-    ) -> None:
-        nonlocal y
-        color = val_color or c["text_green"]
-        txt(fmt_label(label), LEFT, y, c["text_muted"])
-        txt(value, VAL_X, y, color, weight="bold")
-        y += LINE_H
-
-    # ── Title bar ──────────────────────────────────────────────────────────────
-    elems.append(
-        f'  <rect width="{W}" height="{TITLE_H}" rx="6" ry="6" fill="{c["titlebar"]}"/>'
+    SANS = (
+        "-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, "
+        "Helvetica, Arial, sans-serif"
     )
-    # square off the bottom corners of the rounded title-bar rect
-    elems.append(
-        f'  <rect y="{TITLE_H - 6}" width="{W}" height="6" fill="{c["titlebar"]}"/>'
-    )
-    for i, dot_color in enumerate(TRAFFIC_LIGHTS):
-        elems.append(
-            f'  <circle cx="{16 + i * 16}" cy="{TITLE_H / 2}" r="5" fill="{dot_color}"/>'
-        )
-    txt("amibhai — zsh", W / 2 - 44, TITLE_H / 2 + 4, c["text_muted"], size=11)
-    elems.append(
-        f'  <line x1="0" y1="{TITLE_H}" x2="{W}" y2="{TITLE_H}" '
-        f'stroke="{c["border"]}" stroke-width="1"/>'
+    MONO = (
+        "ui-monospace, SFMono-Regular, Menlo, "
+        "&quot;Courier New&quot;, monospace"
     )
 
-    # ── Prompt header ─────────────────────────────────────────────────────────
-    y = TITLE_H + 24
-    x = txt("amibhai", LEFT, y, c["text_green"], size=14, weight="bold")
-    x = txt("@", x, y, c["text_muted"], size=14, weight="bold")
-    x = txt("github", x, y, c["text_accent"], size=14, weight="bold")
-    x = txt(":~$", x, y, c["text_muted"], size=14, weight="bold")
-    cursor_x = x + 8
-    elems.append(
-        f'  <rect x="{cursor_x:.1f}" y="{y - 11}" width="8" height="13" fill="{c["text_green"]}">\n'
-        f'    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" '
-        f'dur="1s" repeatCount="indefinite"/>\n'
-        f'  </rect>'
+    metrics = (
+        f"{stats['repos']} repositories"
+        f"   ·   {stats['contributions']:,} contributions "
+        f"since {stats['since']}"
     )
-    y += LINE_H + 10
+    stamp = f"updated {stats['updated_at']}"
 
-    # ── Stats block ───────────────────────────────────────────────────────────
-    prompt_line(y, "cat stats.log")
-    y += LINE_H + 2
-
-    stat_row("uptime", stats["uptime"])
-
-    # OS: two-line value
-    txt(fmt_label("os"), LEFT, y, c["text_muted"])
-    txt("windows · linux ·", VAL_X, y, c["text_green"], weight="bold")
-    y += LINE_H
-    txt("android 16", VAL_X, y, c["text_green"], weight="bold")
-    y += LINE_H
-
-    stat_row("repos",         f"{stats['repos']:,}")
-    stat_row("commits",       f"{stats['commits']:,}")
-    stat_row("stars",         f"{stats['stars']:,}")
-    stat_row("followers",     f"{stats['followers']:,}")
-    stat_row("lines written", f"{stats['additions']:,}")
-
-    net = stats["net_loc"]
-    net_color = c["text_red"] if net < 0 else c["text_green"]
-    stat_row("net loc", f"{net:,}", val_color=net_color)
-
-    if stats.get("api_error"):
-        y += 2
-        stat_row("api error", "using cached data", val_color=c["text_red"])
-
-    # ── Separator ─────────────────────────────────────────────────────────────
-    y += 6
-    hline(y)
-    y += LINE_H + 2
-
-    # ── Toolkit section ───────────────────────────────────────────────────────
-    prompt_line(y, "ls ./arsenal")
-    y += LINE_H + 2
-
-    TOOL_DESC_X = 160
-    for tool_name, tool_desc in TOOLS:
-        txt(tool_name, LEFT,        y, c["text_primary"])
-        txt(tool_desc, TOOL_DESC_X, y, c["text_muted"])
-        y += LINE_H
-
-    # ── Separator ─────────────────────────────────────────────────────────────
-    y += 6
-    hline(y)
-    y += LINE_H
-
-    # ── Last updated ──────────────────────────────────────────────────────────
-    txt(
-        f"# last sync: {stats['updated_at']}",
-        LEFT, y, c["text_muted"], size=11,
-    )
-    y += LINE_H + 10   # bottom padding
-
-    height = y
-
-    header = (
-        f'<svg xmlns="http://www.w3.org/2000/svg" '
-        f'width="{W}" height="{height}">\n'
-        f'  <rect width="{W}" height="{height}" rx="6" ry="6" '
-        f'fill="{c["background"]}" stroke="{c["border"]}" stroke-width="1"/>'
-    )
-
-    return header + "\n" + "\n".join(elems) + "\n</svg>"
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" \
+width="{W}" height="{H}" role="img" aria-labelledby="plate-title">
+  <title id="plate-title">Swastik — {xml_escape(SUBTITLE)}. \
+{xml_escape(metrics)}.</title>
+  <text x="1" y="38" font-family="{SANS}" font-size="28" font-weight="400" \
+letter-spacing="7" fill="{c['primary']}">SWASTIK</text>
+  <text x="1" y="62" font-family="{SANS}" font-size="12.5" \
+fill="{c['muted']}">{xml_escape(SUBTITLE)}</text>
+  <line x1="1" y1="86" x2="{W - 1}" y2="86" stroke="{c['rule']}" \
+stroke-width="1"/>
+  <text x="1" y="110" font-family="{MONO}" font-size="11.5" \
+fill="{c['muted']}">{xml_escape(metrics)}</text>
+  <text x="{W - 1}" y="110" text-anchor="end" font-family="{MONO}" \
+font-size="11.5" fill="{c['muted']}">{xml_escape(stamp)}</text>
+</svg>
+"""
 
 
 def save_svg(content: str, path: str) -> None:
@@ -522,58 +226,36 @@ def save_svg(content: str, path: str) -> None:
 
 def main() -> None:
     cache = load_cache()
-    api_error = False
-    new_cache = dict(cache)
 
     print("[*] fetching github stats...")
     try:
-        user_stats                       = get_user_stats()
-        stars                            = get_total_stars()
-        commits                          = get_total_commits(user_stats["created_at"])
-        additions, deletions, loc_cache  = get_lines_of_code(cache)
+        user_stats    = get_user_stats()
+        contributions = get_total_contributions(user_stats["created_at"])
 
-        new_cache = loc_cache
-        new_cache["_user_stats"] = user_stats
-        new_cache["_stars"]      = stars
-        new_cache["_commits"]    = commits
+        cache = {"_user_stats": user_stats, "_contributions": contributions}
 
     except Exception as exc:
-        print(f"[!] API call failed: {exc}")
-        api_error = True
+        print(f"[!] API call failed: {exc} — falling back to cache")
 
         cached_user = cache.get("_user_stats") or {}
         user_stats = {
-            "followers":  cached_user.get("followers", 0),
             "repos":      cached_user.get("repos", 0),
-            "created_at": cached_user.get("created_at", "2020-01-01T00:00:00Z"),
+            "created_at": cached_user.get("created_at", "2024-06-24T00:00:00Z"),
         }
-        stars   = cache.get("_stars", 0)
-        commits = cache.get("_commits", 0)
+        contributions = cache.get("_contributions", 0)
 
-        # Sum LOC from whatever is already cached per-repo
-        additions = sum(
-            v["additions"] for v in cache.values()
-            if isinstance(v, dict) and "additions" in v and "deletions" in v
-        )
-        deletions = sum(
-            v["deletions"] for v in cache.values()
-            if isinstance(v, dict) and "additions" in v and "deletions" in v
-        )
+    save_cache(cache)
 
-    # Always persist cache so the next run benefits from this run's data
-    save_cache(new_cache)
+    created = datetime.datetime.fromisoformat(
+        user_stats["created_at"].replace("Z", "+00:00")
+    )
+    now = datetime.datetime.now(datetime.timezone.utc)
 
     stats = {
-        "uptime":      get_uptime(DOB),
-        "os":          "windows · linux · android 16",
-        "repos":       user_stats["repos"],
-        "commits":     commits,
-        "stars":       stars,
-        "followers":   user_stats["followers"],
-        "additions":   additions,
-        "net_loc":     additions - deletions,
-        "updated_at":  datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
-        "api_error":   api_error,
+        "repos":         user_stats["repos"],
+        "contributions": contributions,
+        "since":         created.strftime("%B %Y"),
+        "updated_at":    now.strftime("%d %b %Y"),
     }
 
     print("[*] generating svgs...")
